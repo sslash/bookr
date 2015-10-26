@@ -1,15 +1,24 @@
-import models from '../../models';
+import models from '../../../models';
 
 
 
 
 export default function loadInfo() {
+    console.log('bookings fetch: first ');
+    console.log('bookings fetch:2 ', models.Booking.all);
+
     return new Promise((resolve, reject) => {
 
-        models.Booking.find()
+        console.log('bookings fetch: ', models.Booking.all);
+
+        models.Booking.all()
         .then((res) => {
+            console.log('bookings: ', res);
             resolve(res);
         })
-        .catch(reject);
+        .catch((err) => {
+            console.log('bookings failed: ', err);
+            reject(err);
+        });
     });
 }
