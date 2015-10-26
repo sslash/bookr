@@ -2,14 +2,12 @@ import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import * as bookingActions from 'redux/modules/bookings';
 import {load as loadBookings} from 'redux/modules/bookings';
-import {initializeWithKey} from 'redux-form';
 const configure = require('react-widgets/lib/configure');
 const moment = require('moment');
 const localizers = require('react-widgets/lib/localizers/moment');
 configure.setDateLocalizer(localizers(moment));
 const Calendar = require('react-widgets').Calendar;
-import momentIterator from 'moment-iterator';
-
+import _range from 'lodash/utility/range';
 
 
 @connect(
@@ -19,14 +17,41 @@ import momentIterator from 'moment-iterator';
         error: state.bookings.error,
         loading: state.bookings.loading
     }),
-    {...bookingActions, initializeWithKey })
+    {...bookingActions })
 export default class Home extends Component {
+
+    static propTypes: {
+        save: React.PropTypes.func
+    }
 
     constructor(props) {
         super(props);
         this.state = {
             currentDate: new Date()
         };
+
+        this.onMouseOver = this.onMouseOver.bind(this);
+        this.onMouseOut = this.onMouseOut.bind(this);
+        this.onBookClicked = this.onBookClicked.bind(this);
+    }
+
+    onMouseOver(evt) {
+        const target = evt.target;
+
+        target.textContent = target.textContent === ' - ' ?
+            'book' : 'avbook';
+    }
+
+    onMouseOut(evt) {
+        evt.target.textContent = ' - ';
+    }
+
+    onBookClicked() {
+        this.props.save({
+            date: this.state.currentDate,
+            hour: 10,
+            user: 1337
+        });
     }
 
     static fetchDataDeferred(getState, dispatch) {
@@ -36,24 +61,25 @@ export default class Home extends Component {
     renderHours() {
 
         // TODO: CONTINUE HERE
-        var start = new Date(2015, 4, 12);
-        var end = new Date(2015, 10, 2);
+        return _range(24).map((hour, index) => {
+            let hourStr = hour;
+            if (hourStr === 0) { hourStr = 12; }
 
-        const hours = [];
-        momentIterator(start, end).each('hours', function(d) {
-            hours.push(d);
-        });
+            if ((hourStr + '').length < 2) {hourStr = '0' + hourStr; }
 
-        return hours.map((hour) => {
+            hourStr = hourStr + ':00';
+
             return (
-                <tr>
-                    <th scope="row">{moment(hour).format('YYYY-MM-DD HH:mm')}</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
+                <tr className="calendarRow" key={`cal-${index}`}>
+                    <th scope="row">{hourStr}</th>
+                    <td onClick={this.onBookClicked} onMouseOver={this.onMouseOver} onMouseOut={this.onMouseOut}> - </td>
+                    <td onClick={this.onBookClicked} onMouseOver={this.onMouseOver} onMouseOut={this.onMouseOut}> - </td>
+                    <td onClick={this.onBookClicked} onMouseOver={this.onMouseOver} onMouseOut={this.onMouseOut}> - </td>
+                    <td onClick={this.onBookClicked} onMouseOver={this.onMouseOver} onMouseOut={this.onMouseOut}> - </td>
+                    <td onClick={this.onBookClicked} onMouseOver={this.onMouseOver} onMouseOut={this.onMouseOut}> - </td>
                 </tr>
             );
-        })
+        });
     }
 
 
@@ -68,16 +94,27 @@ export default class Home extends Component {
                             <h1>Bookr</h1>
                             <button className="rw-btn"></button>
                             <Calendar defaultValue={this.state.currentDate} />
+
+                            <div className="panel panel-primary" style={{marginTop: 50}}>
+                                <div className="panel-heading">
+                                    Siste beskjeder
+                                </div>
+                                <div className="panel-body">
+                                    ...
+                                </div>
+                            </div>
                         </div>
                         <div className="col-xs-6">
-                            <h4>{moment(this.state.currentDate).format('MMM Do YY')}</h4>
+                            <h4 style={{marginTop: 50}}>{moment(this.state.currentDate).format('MMM Do YY')}</h4>
                             <table className="table table-striped">
                                 <thead>
                                     <tr>
-                                        <th>#</th>
-                                        <th>First Name</th>
-                                        <th>Last Name</th>
-                                        <th>Username</th>
+                                        <th>Klokken</th>
+                                        <th>Badstue</th>
+                                        <th>Boblebad</th>
+                                        <th>Trimrom</th>
+                                        <th>Solarium</th>
+                                        <th>Fellesrom</th>
                                     </tr>
                                 </thead>
                                 <tbody>

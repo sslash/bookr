@@ -71,15 +71,11 @@ export default class App extends Component {
                     <div className="container">
                         <NavbarLink to="/" className="navbar-brand" component={IndexLink}>
                             <div className={styles.brand}/>
-                            React Redux Example
+                            Tromsøbygget booking
                         </NavbarLink>
 
                         <ul className="nav navbar-nav">
-                            {user && <li><NavbarLink to="/chat">Chat</NavbarLink></li>}
-
-                            <li><NavbarLink to="/widgets">Widgets</NavbarLink></li>
-                            <li><NavbarLink to="/survey">Survey</NavbarLink></li>
-                            <li><NavbarLink to="/about">About Us</NavbarLink></li>
+                            <li><NavbarLink to="/about">Om</NavbarLink></li>
                             {!user && <li><NavbarLink to="/login">Login</NavbarLink></li>}
                             {user && <li className="logout-link"><a href="/logout" onClick={::this.handleLogout}>Logout</a></li>}
                         </ul>
