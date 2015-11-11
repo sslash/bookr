@@ -33,16 +33,18 @@ export default class Home extends Component {
     onMouseOver(evt) {
         const target = evt.target;
 
-        target.textContent = target.textContent === ' - ' ?
-            'book' : 'avbook';
+        if (!target.textContent.match(/Booket/)) {
+            target.textContent = 'book';
+        }
     }
 
     onMouseOut(evt) {
-        evt.target.textContent = ' - ';
+        if (evt.target.textContent.match(/book/)) {
+            evt.target.textContent = ' - ';
+        }
     }
 
     onBookClicked(hour, facility) {
-        console.log('hour: ', hour);
         const date = moment(this.state.currentDate)
             .seconds(0)
             .hours(hour)
@@ -71,34 +73,33 @@ export default class Home extends Component {
             .hours(hour)
             .minutes(0);
 
+            let txt;
 
-        const booked = this.props.bookings.filter(booking => {
+            const booked = this.props.bookings.filter(booking => {
 
-            return facility === booking.facility &&
-                currentDate.isSame(booking.bookingTime, 'day') &&
-                currentDate.isSame(booking.bookingTime, 'hour');
-        });
+                return facility === booking.facility &&
+                    currentDate.isSame(booking.bookingTime, 'day') &&
+                    currentDate.isSame(booking.bookingTime, 'hour');
+            });
 
+            txt = (booked && booked.length) ? 'Booket' : ' - ';
 
         return (
             <td onClick={this.onBookClicked.bind(this, hour, facility)}
                  onMouseOver={this.onMouseOver}
-                 onMouseOut={this.onMouseOut}> {booked && booked.length ? 'Booket' : '-'}
+                 onMouseOut={this.onMouseOut}><span>{txt}</span>
              </td>
-        )
+        );
     }
 
     renderHours() {
 
-        // TODO: CONTINUE HERE
         return _range(24).map((hour) => {
             let hourStr = hour;
 
             if ((hourStr + '').length < 2) {hourStr = '0' + hourStr; }
 
             hourStr = hourStr + ':00';
-
-
 
             return (
                 <tr className="calendarRow" key={`cal-${hour}`}>

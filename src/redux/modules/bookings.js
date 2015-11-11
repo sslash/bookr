@@ -57,7 +57,8 @@ export default function reducer(state = initialState, action = {}) {
 
         case SAVE_SUCCESS:
             const data = [...state.data];
-            data[action.result.id - 1] = action.result;
+            data.push(action.result);
+            
             return {
                 ...state,
                 data: data,
