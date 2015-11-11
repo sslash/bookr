@@ -20,10 +20,6 @@ import _range from 'lodash/utility/range';
     {...bookingActions })
 export default class Home extends Component {
 
-    static propTypes: {
-        save: React.PropTypes.func
-    }
-
     constructor(props) {
         super(props);
         this.state = {
@@ -32,7 +28,6 @@ export default class Home extends Component {
 
         this.onMouseOver = this.onMouseOver.bind(this);
         this.onMouseOut = this.onMouseOut.bind(this);
-        this.onBookClicked = this.onBookClicked.bind(this);
     }
 
     onMouseOver(evt) {
@@ -46,42 +41,77 @@ export default class Home extends Component {
         evt.target.textContent = ' - ';
     }
 
-    onBookClicked() {
+    onBookClicked(hour, facility) {
+        console.log('hour: ', hour);
+        const date = moment(this.state.currentDate)
+            .seconds(0)
+            .hours(hour)
+            .minutes(0)
+            .toDate();
+
         this.props.save({
-            date: this.state.currentDate,
-            hour: 10,
+            bookingTime: date,
+            facility,
             user: 1337
         });
+    }
+
+    changeCurrentDate(value) {
+        this.setState({currentDate: value});
     }
 
     static fetchDataDeferred(getState, dispatch) {
         return dispatch(loadBookings());
     }
 
+    renderRow (hour, facility) {
+
+        const currentDate = moment(this.state.currentDate)
+            .seconds(0)
+            .hours(hour)
+            .minutes(0);
+
+
+        const booked = this.props.bookings.filter(booking => {
+
+            return facility === booking.facility &&
+                currentDate.isSame(booking.bookingTime, 'day') &&
+                currentDate.isSame(booking.bookingTime, 'hour');
+        });
+
+
+        return (
+            <td onClick={this.onBookClicked.bind(this, hour, facility)}
+                 onMouseOver={this.onMouseOver}
+                 onMouseOut={this.onMouseOut}> {booked && booked.length ? 'Booket' : '-'}
+             </td>
+        )
+    }
+
     renderHours() {
 
         // TODO: CONTINUE HERE
-        return _range(24).map((hour, index) => {
+        return _range(24).map((hour) => {
             let hourStr = hour;
-            if (hourStr === 0) { hourStr = 12; }
 
             if ((hourStr + '').length < 2) {hourStr = '0' + hourStr; }
 
             hourStr = hourStr + ':00';
 
+
+
             return (
-                <tr className="calendarRow" key={`cal-${index}`}>
+                <tr className="calendarRow" key={`cal-${hour}`}>
                     <th scope="row">{hourStr}</th>
-                    <td onClick={this.onBookClicked} onMouseOver={this.onMouseOver} onMouseOut={this.onMouseOut}> - </td>
-                    <td onClick={this.onBookClicked} onMouseOver={this.onMouseOver} onMouseOut={this.onMouseOut}> - </td>
-                    <td onClick={this.onBookClicked} onMouseOver={this.onMouseOver} onMouseOut={this.onMouseOut}> - </td>
-                    <td onClick={this.onBookClicked} onMouseOver={this.onMouseOver} onMouseOut={this.onMouseOut}> - </td>
-                    <td onClick={this.onBookClicked} onMouseOver={this.onMouseOver} onMouseOut={this.onMouseOut}> - </td>
+                    {this.renderRow(hour, 'facility')}
+                    {this.renderRow(hour, 'boblebad')}
+                    {this.renderRow(hour, 'trimrom')}
+                    {this.renderRow(hour, 'solarium')}
+                    {this.renderRow(hour, 'fellesrom')}
                 </tr>
             );
         });
     }
-
 
     render() {
         const styles = require('./Home.scss');
@@ -93,7 +123,10 @@ export default class Home extends Component {
                         <div className="col-xs-6">
                             <h1>Bookr</h1>
                             <button className="rw-btn"></button>
-                            <Calendar defaultValue={this.state.currentDate} />
+                            <Calendar
+                                defaultValue={this.state.currentDate}
+                                onChange={this.changeCurrentDate.bind(this)}
+                                />
 
                             <div className="panel panel-primary" style={{marginTop: 50}}>
                                 <div className="panel-heading">
@@ -129,3 +162,7 @@ export default class Home extends Component {
         );
     }
 }
+
+Home.propTypes = {
+    save: React.PropTypes.func
+};

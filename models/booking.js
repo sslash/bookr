@@ -1,7 +1,8 @@
-'use strict';
 module.exports = function(sequelize, DataTypes) {
-    var Booking = sequelize.define('Booking', {
-        bookingTime: DataTypes.DATE
+
+    const Booking = sequelize.define('Booking', {
+        bookingTime: DataTypes.DATE,
+        facility: DataTypes.STRING
     }, {
         classMethods: {
             associate: function(models) {
