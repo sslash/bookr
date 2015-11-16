@@ -1,4 +1,4 @@
-finish signup
-save with User
-login
-fetch
+fetch bookings in componentDidMount filtered by current date
+    include users (owners) in bookings fetch
+
+support delete booking
