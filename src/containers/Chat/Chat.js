@@ -50,32 +50,42 @@ export default class Chat extends Component {
         });
     }
 
+    renderChat() {
+        if (!this.props.hideHeader) {
+            return;
+        }
+
+        if (this.props.user) {
+            const {user} = this.props;
+            return (<div>
+                <form className="login-form" onSubmit={this.handleSubmit.bind(this)}>
+                    <input type="text" ref="message" placeholder="Enter your message"
+                        value={this.state.message}
+                        onChange={(event) => {
+                            this.setState({message: event.target.value});
+                        }
+                    }/>
+                    <button className="btn" onClick={this.handleSubmit.bind(this)}>Send</button>
+                </form>
+            </div>);
+        } else {
+            return <a href="/login">Logg inn for å skrive meldinger</a>;
+        }
+    }
+
     render() {
         const style = require('./Chat.scss');
-        const {user} = this.props;
 
         return (
             <div className={style.chat + ' container'}>
-                <h1 className={style}>Meldinger</h1>
+                    {this.props.hideHeader ? null : <h1 className={style}>Meldinger</h1>}
+                    <ul>
+                        {this.state.messages.map((msg) => {
+                            return <li key={`chat.msg.${msg.id}`}>{msg.from}: {msg.text}</li>;
+                        })}
+                    </ul>
 
-                {user &&
-                    <div>
-                        <ul>
-                            {this.state.messages.map((msg) => {
-                                return <li key={`chat.msg.${msg.id}`}>{msg.from}: {msg.text}</li>;
-                            })}
-                        </ul>
-                        <form className="login-form" onSubmit={this.handleSubmit.bind(this)}>
-                            <input type="text" ref="message" placeholder="Enter your message"
-                                value={this.state.message}
-                                onChange={(event) => {
-                                    this.setState({message: event.target.value});
-                                }
-                            }/>
-                            <button className="btn" onClick={this.handleSubmit.bind(this)}>Send</button>
-                        </form>
-                    </div>
-                }
+                    {this.renderChat()}
             </div>
         );
     }

@@ -40,8 +40,8 @@ export default (store) => {
       <IndexRoute component={Home}/>
 
       { /* Routes requiring login */ }
+      <Route path="chat" component={Chat}/>
       <Route onEnter={requireLogin}>
-        <Route path="chat" component={Chat}/>
         <Route path="loginSuccess" component={LoginSuccess}/>
       </Route>
 

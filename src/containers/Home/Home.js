@@ -2,12 +2,14 @@ import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import * as bookingActions from 'redux/modules/bookings';
 import {load as loadBookings} from 'redux/modules/bookings';
+import BookingColumn from './BookingColumn';
 const configure = require('react-widgets/lib/configure');
 const moment = require('moment');
 const localizers = require('react-widgets/lib/localizers/moment');
 configure.setDateLocalizer(localizers(moment));
 const Calendar = require('react-widgets').Calendar;
 import _range from 'lodash/utility/range';
+import Chat from '../Chat/Chat';
 
 
 @connect(
@@ -15,7 +17,8 @@ import _range from 'lodash/utility/range';
         bookings: state.bookings.data,
         editing: state.bookings.editing,
         error: state.bookings.error,
-        loading: state.bookings.loading
+        loading: state.bookings.loading,
+        auth:state.auth
     }),
     {...bookingActions })
 export default class Home extends Component {
@@ -25,37 +28,6 @@ export default class Home extends Component {
         this.state = {
             currentDate: new Date()
         };
-
-        this.onMouseOver = this.onMouseOver.bind(this);
-        this.onMouseOut = this.onMouseOut.bind(this);
-    }
-
-    onMouseOver(evt) {
-        const target = evt.target;
-
-        if (!target.textContent.match(/Booket/)) {
-            target.textContent = 'book';
-        }
-    }
-
-    onMouseOut(evt) {
-        if (evt.target.textContent.match(/book/)) {
-            evt.target.textContent = ' - ';
-        }
-    }
-
-    onBookClicked(hour, facility) {
-        const date = moment(this.state.currentDate)
-            .seconds(0)
-            .hours(hour)
-            .minutes(0)
-            .toDate();
-
-        this.props.save({
-            bookingTime: date,
-            facility,
-            user: 1337
-        });
     }
 
     changeCurrentDate(value) {
@@ -63,10 +35,15 @@ export default class Home extends Component {
     }
 
     static fetchDataDeferred(getState, dispatch) {
+        // TODO: only fetch bookings with current date
         return dispatch(loadBookings());
     }
 
     renderRow (hour, facility) {
+
+        if (!this.props.bookings || !this.props.bookings.length) {
+            return;
+        }
 
         const currentDate = moment(this.state.currentDate)
             .seconds(0)
@@ -82,13 +59,14 @@ export default class Home extends Component {
                     currentDate.isSame(booking.bookingTime, 'hour');
             });
 
-            txt = (booked && booked.length) ? 'Booket' : ' - ';
-
-        return (
-            <td onClick={this.onBookClicked.bind(this, hour, facility)}
-                 onMouseOver={this.onMouseOver}
-                 onMouseOut={this.onMouseOut}><span>{txt}</span>
-             </td>
+        return (<BookingColumn hour={hour}
+            facility={facility}
+            currentDate={this.state.currentDate}
+            booked={booked}
+            save={this.props.save}
+            available={!booked || !booked.length}
+            user={this.props.auth.user}
+            />
         );
     }
 
@@ -134,7 +112,7 @@ export default class Home extends Component {
                                     Siste beskjeder
                                 </div>
                                 <div className="panel-body">
-                                    ...
+                                    <Chat {...this.props} hideHeader={true}/>
                                 </div>
                             </div>
                         </div>
@@ -155,7 +133,6 @@ export default class Home extends Component {
                                     {this.renderHours()}
                                 </tbody>
                             </table>
-
                         </div>
                     </div>
                 </div>

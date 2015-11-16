@@ -6,12 +6,7 @@
     }
 
     td {
-        cursor: pointer;
         text-align: center;
-        &:hover {
-            background-color: $brand-primary;
-            color: #fff;
-        }
     }
 }
 .masthead {
@@ -60,6 +55,14 @@
     }
     .github {
         font-size: 1.5em;
+    }
+}
+
+.available {
+    cursor: pointer;
+    &:hover {
+        color: #fff;
+        background-color: $brand-primary;
     }
 }
 

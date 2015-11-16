@@ -2,9 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { IndexLink, Link } from 'react-router';
 import { connect } from 'react-redux';
 import DocumentMeta from 'react-document-meta';
-import { isLoaded as isInfoLoaded, load as loadInfo } from 'redux/modules/info';
 import { isLoaded as isAuthLoaded, load as loadAuth, logout } from 'redux/modules/auth';
-import { InfoBar } from 'components';
 import { pushState } from 'redux-router';
 import config from '../../config';
 
@@ -47,9 +45,6 @@ export default class App extends Component {
 
     static fetchData(getState, dispatch) {
         const promises = [];
-        if (!isInfoLoaded(getState())) {
-            promises.push(dispatch(loadInfo()));
-        }
         if (!isAuthLoaded(getState())) {
             promises.push(dispatch(loadAuth()));
         }
@@ -64,6 +59,7 @@ export default class App extends Component {
     render() {
         const {user} = this.props;
         const styles = require('./App.scss');
+
         return (
             <div className={styles.app}>
                 <DocumentMeta {...config.app}/>
@@ -75,12 +71,12 @@ export default class App extends Component {
                         </NavbarLink>
 
                         <ul className="nav navbar-nav">
-                            <li><NavbarLink to="/about">Om</NavbarLink></li>
+                            <li><NavbarLink to="/chat">Beskjeder</NavbarLink></li>
                             {!user && <li><NavbarLink to="/login">Login</NavbarLink></li>}
                             {user && <li className="logout-link"><a href="/logout" onClick={::this.handleLogout}>Logout</a></li>}
                         </ul>
                         {user &&
-                            <p className={styles.loggedInMessage + ' navbar-text'}>Logged in as <strong>{user.name}</strong>.</p>}
+                            <p className={styles.loggedInMessage + ' navbar-text'}>Logged in as <strong>{user.email}</strong>.</p>}
                                 <ul className="nav navbar-nav navbar-right">
                                     <li>
                                         <a href="https://github.com/erikras/react-redux-universal-hot-example"
@@ -92,7 +88,6 @@ export default class App extends Component {
                         <div className={styles.appContent}>
                             {this.props.children}
                         </div>
-                        <InfoBar/>
                     </div>
                 );
     }

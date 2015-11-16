@@ -110,7 +110,7 @@ export function login(name, password) {
         types: [LOGIN, LOGIN_SUCCESS, LOGIN_FAIL],
         promise: (client) => client.post('/login', {
             data: {
-                name: name,
+                email: name,
                 password: password
             }
         })
@@ -122,7 +122,7 @@ export function signup(name, password) {
         types: [SIGNUP, SIGNUP_SUCCESS, SIGNUP_FAIL],
         promise: (client) => client.post('/signup', {
             data: {
-                name: name,
+                email: name,
                 password: password
             }
         })
