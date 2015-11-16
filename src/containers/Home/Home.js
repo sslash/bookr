@@ -41,9 +41,9 @@ export default class Home extends Component {
 
     renderRow (hour, facility) {
 
-        if (!this.props.bookings || !this.props.bookings.length) {
-            return;
-        }
+        // if (!this.props.bookings || !this.props.bookings.length) {
+        //     return;
+        // }
 
         const currentDate = moment(this.state.currentDate)
             .seconds(0)
