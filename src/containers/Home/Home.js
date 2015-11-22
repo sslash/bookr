@@ -100,7 +100,7 @@ export default class Home extends Component {
                 <div className="container">
                     <div className="row">
                         <div className="col-xs-6">
-                            <h1>Bookr</h1>
+                            <h1>Kalender</h1>
                             <button className="rw-btn"></button>
                             <Calendar
                                 defaultValue={this.state.currentDate}

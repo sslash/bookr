@@ -67,7 +67,7 @@ export default class App extends Component {
                     <div className="container">
                         <NavbarLink to="/" className="navbar-brand" component={IndexLink}>
                             <div className={styles.brand}/>
-                            Tromsøbygget booking
+                            Skipperhuset SPA
                         </NavbarLink>
 
                         <ul className="nav navbar-nav">
@@ -76,19 +76,13 @@ export default class App extends Component {
                             {user && <li className="logout-link"><a href="/logout" onClick={::this.handleLogout}>Logout</a></li>}
                         </ul>
                         {user &&
-                            <p className={styles.loggedInMessage + ' navbar-text'}>Logged in as <strong>{user.email}</strong>.</p>}
-                                <ul className="nav navbar-nav navbar-right">
-                                    <li>
-                                        <a href="https://github.com/erikras/react-redux-universal-hot-example"
-                                            target="_blank" title="View on Github"><i className="fa fa-github"/></a>
-                                    </li>
-                                </ul>
+                            <p className={styles.loggedInMessage + ' navbar-text'}>Logget inn som <strong>{user.email}</strong>.</p>}
                             </div>
-                        </nav>
-                        <div className={styles.appContent}>
-                            {this.props.children}
-                        </div>
+                    </nav>
+                    <div className={styles.appContent}>
+                        {this.props.children}
                     </div>
-                );
+                </div>
+            );
     }
 }

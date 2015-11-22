@@ -32,19 +32,19 @@ export default class Login extends Component {
             password.value = '';
         }
 
-        renderSignup() {
-            return (
-                <div>
-                    <p>Or Register</p>
-                    <form className="login-form signup-form" onSubmit={::this.handleSignup}>
-                        <input type="email" ref="signupEmail" placeholder="Enter your email"/>
-                        <input type="password" ref="signupPassword" placeholder="Enter a password"/>
-                        <button className="btn btn-primary" onClick={::this.handleSignup}><i className="fa fa-sign-in"/>{' '}Signup
-                        </button>
-                    </form>
-                </div>
-            );
-        }
+        // renderSignup() {
+        //     return (
+        //         <div>
+        //             <p>Or Register</p>
+        //             <form className="login-form signup-form" onSubmit={::this.handleSignup}>
+        //                 <input type="email" ref="signupEmail" placeholder="Enter your email"/>
+        //                 <input type="password" ref="signupPassword" placeholder="Enter a password"/>
+        //                 <button className="btn btn-primary" onClick={::this.handleSignup}><i className="fa fa-sign-in"/>{' '}Signup
+        //                 </button>
+        //             </form>
+        //         </div>
+        //     );
+        // }
 
         render() {
             const {user, logout} = this.props;
@@ -58,12 +58,12 @@ export default class Login extends Component {
                             <form className="login-form" onSubmit={::this.handleSubmit}>
                                 <input type="text" ref="loginEmail" placeholder="Email"/>
                                 <input type="password" ref="loginPassword" placeholder="Password"/>
-                                <button className="btn btn-success" onClick={::this.handleSubmit}><i className="fa fa-sign-in"/>{' '}Log In
+                                <button className="btn btn-success" onClick={::this.handleSubmit}><i className="fa fa-sign-in"/>{' '}Login
                                 </button>
                             </form>
                         </div>
                     }
-                    {this.renderSignup()}
+                    {/*this.renderSignup()*/}
 
                     {user &&
                         <div>
